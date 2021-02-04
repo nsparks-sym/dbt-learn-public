@@ -19,8 +19,6 @@ models:
                 values: ['placed', 'shipped', 'completed', 'returned', 'return_pending']
         - name: customer_id
           tests:
-            - not_null
-    - name: fct_orders
-      columns:
-        - name: customer_id
-          tests: ['not_null']
+            - relationships:
+                to: ref('customers')
+                field: id
