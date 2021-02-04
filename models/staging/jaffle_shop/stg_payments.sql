@@ -5,7 +5,8 @@ WITH payments AS (
             , status            AS payment_status
             , CAST(amount AS DECIMAL) / 100 AS amountDollars    -- I don't think this is working.  Still shows INTEGER.
             , created           AS created_date
-    FROM    raw.stripe.payment
+    --FROM    raw.stripe.payment
+    FROM    {{ source('stripe', 'payment')}}
 )
 
 SELECT  *

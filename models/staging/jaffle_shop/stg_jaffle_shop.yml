@@ -2,23 +2,55 @@ version: 2
 
 models:
     - name: stg_customers
+      description: Staged data from raw.jaffle_shop.customers
       columns:
         - name: customer_id
+          description:  Primary Key for ('customers')
           tests:
             - unique
             - not_null
+        - name: first_name
+          description: Customer's legal given name.  Test exists to validate no numbers exist.
+        - name: last_name
+          description: Customer's legal last name.  Test exists to validate no numbers exist.
     - name: stg_orders
+      description: Staged data from raw.jaffle_shop.orders
       columns:
         - name: order_id
+          description:  Primary Key for ('orders')
           tests:
             - unique
             - not_null
         - name: status
+          description: "{{ doc('order_status')}}"
           tests:
             - accepted_values:
                 values: ['placed', 'shipped', 'completed', 'returned', 'return_pending']
         - name: customer_id
+          description: Foreign Key from ('customers')
           tests:
+            - not_null
             - relationships:
-                to: ref('customers')
-                field: id
+                to: ref('stg_customers')
+                field: customer_id
+    - name: stg_payments
+      description:  Staged data from raw.jaffle_shop.payments
+      columns:
+        - name: payment_id
+          description:  Primary Key for ('payments')
+          tests:
+            - not_null
+            - unique
+        - name: order_id
+          description: Foreign Key to ('orders')
+          tests:
+            - not_null
+            - relationships:
+                to: ref('stg_orders')
+                field: order_id
+        - name: payment_method
+          description: "{{ doc('payment_method')}}"
+          tests:
+            - not_null
+            - accepted_values:
+                values: ['gift_card', 'credit_card', 'coupon', 'bank_transfer']
