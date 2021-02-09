@@ -1,13 +1,13 @@
 with orders as (
     
     select
-        id as order_id,
-        user_id as customer_id,
-        order_date,
-        status
-
+        id              AS order_id
+        , user_id       AS customer_id
+        , order_date
+        , status
    -- from raw.jaffle_shop.orders
     FROM    {{ source('jaffle_shop', 'orders')}}
+    {{ limitDataInDev('order_date', '4') }}
 )
 
 select * from orders
